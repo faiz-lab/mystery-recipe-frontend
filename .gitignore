@@ -1,0 +1,30 @@
+# Node.js
+/node_modules/
+
+# Build output
+/dist/
+/build/
+/dist-ssr/
+/.cache/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Environment variables
+.env
+.env.*    # 支持 .env.local / .env.production 等
+
+# System files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+!.vscode/extensions.json  # 保留 vscode 插件配置（可选，加不加都行）
+
+# Optional: Coverage reports
+coverage/
