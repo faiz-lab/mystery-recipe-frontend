@@ -84,6 +84,7 @@ export default function App() {
   const [stepIndex, setStepIndex] = useState(-1); // -1 means not started yet
   const [isLoading, setIsLoading] = useState(false);
   const [steps, setSteps] = useState([]);
+  const [isComposing, setIsComposing] = useState(false);
 
   const handleAddIngredient = () => {
     if (inputValue.trim() !== "") {
@@ -110,7 +111,7 @@ export default function App() {
       setTimeout(() => {
         setStepIndex(0);
         setIsLoading(false);
-      }, 800);
+      }, 500);
     } catch (error) {
       console.error("Error generating recipe:", error);
       setIsLoading(false);
@@ -136,8 +137,10 @@ export default function App() {
             placeholder="食材を入力..."
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
+            onCompositionStart={() => setIsComposing(true)}   // 👈 加这一行
+            onCompositionEnd={() => setIsComposing(false)}    // 👈 加这一行
             onKeyDown={(e) => {
-              if (e.key === "Enter") {
+              if (e.key === "Enter" && !isComposing) {
                 e.preventDefault(); // 防止默认提交
                 handleAddIngredient();
               }
