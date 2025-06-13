@@ -3,37 +3,92 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { motion, AnimatePresence } from "motion/react";
+import axios from "axios";
 
-const mockIngredients = [
-  { name: "ニンジン", icon: "🥕" },
-  { name: "じゃがいも", icon: "🥔" },
-  { name: "玉ねぎ", icon: "🧅" },
-  { name: "鶏肉", icon: "🍗" },
-  { name: "味噌", icon: "🫘" },
-  { name: "しょうゆ", icon: "🧂" },
-  { name: "みりん", icon: "🍶" },
-  { name: "米", icon: "🍚" },
-];
+const ingredientEmojiMap = {
+  // 蔬菜・野菜
+  ニンジン: "🥕",
+  じゃがいも: "🥔",
+  玉ねぎ: "🧅",
+  キャベツ: "🥬",
+  ブロッコリー: "🥦",
+  トマト: "🍅",
+  きゅうり: "🥒",
+  ピーマン: "🫑",
+  なす: "🍆",
+  ほうれん草: "🥬",
+  とうもろこし: "🌽",
+  レタス: "🥬",
 
-const mockSteps = [
-  "ニンジンを細切りにする",
-  "フライパンで炒める",
-  "醤油、みりん、砂糖を加える",
-  "盛り付けて完成",
-];
+  // 肉類・魚介類
+  鶏肉: "🍗",
+  豚肉: "🥩",
+  牛肉: "🥩",
+  ひき肉: "🥩",
+  魚: "🐟",
+  えび: "🦐",
+  いか: "🦑",
+  たこ: "🐙",
+  貝: "🐚",
+
+  // 調味料・調味品
+  味噌: "🫘",
+  しょうゆ: "🧂",
+  みりん: "🍶",
+  砂糖: "🍬",
+  塩: "🧂",
+  酢: "🍶",
+  ケチャップ: "🍅",
+  マヨネーズ: "🥚",
+  ソース: "🥫",
+
+  // 穀類・米・パン
+  米: "🍚",
+  パン: "🍞",
+  パスタ: "🍝",
+  うどん: "🍜",
+  そば: "🍜",
+  ラーメン: "🍜",
+
+  // 乳製品・卵
+  牛乳: "🥛",
+  チーズ: "🧀",
+  ヨーグルト: "🥛",
+  卵: "🥚",
+
+  // 果物・フルーツ
+  りんご: "🍎",
+  バナナ: "🍌",
+  いちご: "🍓",
+  みかん: "🍊",
+  ぶどう: "🍇",
+  メロン: "🍈",
+  スイカ: "🍉",
+  パイナップル: "🍍",
+  レモン: "🍋",
+  さくらんぼ: "🍒",
+
+  // 飲み物・ドリンク
+  水: "💧",
+  お茶: "🍵",
+  コーヒー: "☕",
+  ジュース: "🧃",
+  ワイン: "🍷",
+  ビール: "🍺",
+};
 
 export default function App() {
   const [inputValue, setInputValue] = useState("");
-  const [ingredients, setIngredients] = useState(mockIngredients);
+  const [ingredients, setIngredients] = useState([]);
   const [stepIndex, setStepIndex] = useState(-1); // -1 means not started yet
   const [isLoading, setIsLoading] = useState(false);
+  const [steps, setSteps] = useState([]);
 
   const handleAddIngredient = () => {
     if (inputValue.trim() !== "") {
-      setIngredients((prev) => [
-        ...prev,
-        { name: inputValue.trim(), icon: "🍴" },
-      ]);
+      const name = inputValue.trim();
+      const icon = ingredientEmojiMap[name] || "🍴"; // 如果匹配不到就用 🍴
+      setIngredients((prev) => [...prev, { name, icon }]);
       setInputValue("");
     }
   };
@@ -42,16 +97,27 @@ export default function App() {
     setIngredients((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const handleStartCooking = () => {
+  const handleStartCooking = async () => {
     setIsLoading(true);
-    setTimeout(() => {
-      setStepIndex(0);
+    try {
+      const res = await axios.post("http://localhost:8000/recipe", {
+        ingredients: ingredients.map((item) => item.name),
+      });
+      setSteps(res.data.steps);
+
+      // 保留原来 800ms delay 效果
+      setTimeout(() => {
+        setStepIndex(0);
+        setIsLoading(false);
+      }, 800);
+    } catch (error) {
+      console.error("Error generating recipe:", error);
       setIsLoading(false);
-    }, 800);
+    }
   };
 
   const handleNextStep = () => {
-    setStepIndex((prev) => Math.min(prev + 1, mockSteps.length - 1));
+    setStepIndex((prev) => Math.min(prev + 1, steps.length - 1));
   };
 
   return (
@@ -140,7 +206,7 @@ export default function App() {
         ) : (
           <div className="space-y-4 max-w-xl mx-auto">
             <AnimatePresence initial={false}>
-              {mockSteps.slice(0, stepIndex + 1).map((step, index) => (
+              {steps.slice(0, stepIndex + 1).map((step, index) => (
                 <motion.div
                   key={step}
                   initial={{ opacity: 0, translateY: -10 }}
@@ -157,13 +223,13 @@ export default function App() {
               ))}
             </AnimatePresence>
 
-            {stepIndex < mockSteps.length - 1 && (
+            {stepIndex < steps.length - 1 && (
               <Button size="lg" onClick={handleNextStep}>
                 次のステップ ▶️
               </Button>
             )}
 
-            {stepIndex === mockSteps.length - 1 && (
+            {stepIndex === steps.length - 1 && (
               <motion.p
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
