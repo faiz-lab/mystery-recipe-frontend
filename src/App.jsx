@@ -101,7 +101,7 @@ export default function App() {
   const handleStartCooking = async () => {
     setIsLoading(true);
     try {
-      const res = await axios.post("http://localhost:8000/recipe", {
+      const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/recipe`, {
         ingredients: ingredients.map((item) => item.name),
       });
       setSteps(res.data.steps);
