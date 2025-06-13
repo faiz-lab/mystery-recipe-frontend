@@ -31,7 +31,7 @@ const ingredientEmojiMap = {
   たこ: "🐙",
   貝: "🐚",
   ハム: "🥩",
-  
+
   // 調味料・調味品
   味噌: "🫘",
   しょうゆ: "🧂",
@@ -102,9 +102,12 @@ export default function App() {
   const handleStartCooking = async () => {
     setIsLoading(true);
     try {
-      const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/recipe`, {
-        ingredients: ingredients.map((item) => item.name),
-      });
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_BASE_URL}/recipe`,
+        {
+          ingredients: ingredients.map((item) => item.name),
+        }
+      );
       setSteps(res.data.steps);
 
       // 保留原来 800ms delay 效果
@@ -122,6 +125,13 @@ export default function App() {
     setStepIndex((prev) => Math.min(prev + 1, steps.length - 1));
   };
 
+  const handleReset = () => {
+    setSteps([]);
+    setStepIndex(-1);
+    setIngredients([]);
+    setInputValue("");
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <header className="mb-12 text-center">
@@ -137,8 +147,8 @@ export default function App() {
             placeholder="食材を入力..."
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
-            onCompositionStart={() => setIsComposing(true)}   // 👈 加这一行
-            onCompositionEnd={() => setIsComposing(false)}    // 👈 加这一行
+            onCompositionStart={() => setIsComposing(true)}
+            onCompositionEnd={() => setIsComposing(false)}
             onKeyDown={(e) => {
               if (e.key === "Enter" && !isComposing) {
                 e.preventDefault(); // 防止默认提交
@@ -234,13 +244,18 @@ export default function App() {
             )}
 
             {stepIndex === steps.length - 1 && (
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="text-xl text-green-600 font-bold"
-              >
-                🎉 完成！
-              </motion.p>
+              <>
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="text-xl text-green-600 font-bold"
+                >
+                  🎉 完成！
+                </motion.p>
+                <Button size="lg" className="mt-4" onClick={handleReset}>
+                  🔄 もう一度試す
+                </Button>
+              </>
             )}
           </div>
         )}
