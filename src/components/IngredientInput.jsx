@@ -1,5 +1,5 @@
-import { Input } from "@/components/input";
-import { Button } from "@/components/button";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 export default function IngredientInput({
   ingredientName,

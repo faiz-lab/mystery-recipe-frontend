@@ -6,8 +6,9 @@ import IngredientSelector from "@/components/IngredientSelector";
 import CookingTypeSelector from "@/components/CookingTypeSelector";
 import RecipeResult from "@/components/RecipeResult";
 import LoadingOverlay from "@/components/LoadingOverlay";
-import { Button } from "@/components/button";
+import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "motion/react";
+import CookingTimeInput from "@/components/CookingTimeInput";
 
 const ingredientOptions = [
   "ニンジン",
@@ -38,6 +39,7 @@ export default function MainPage() {
   const [recipeName, setRecipeName] = useState("");
   const [showResult, setShowResult] = useState(false);
   const [isComposing, setIsComposing] = useState(false);
+  const [cookingTime, setCookingTime] = useState(15);
 
   const handleAddIngredient = () => {
     if (ingredientName.trim() !== "") {
@@ -87,7 +89,7 @@ export default function MainPage() {
     <div className="flex flex-col min-h-screen bg-gradient-to-b from-[#FAFAFA] to-[#F7F7F7]">
       <Header />
 
-      <div className="flex-1 flex justify-center items-start py-16 px-4">
+      <div className="flex-1 flex justify-center items-start py-12 px-4">
         <div className="max-w-3xl w-full space-y-12 relative">
           {/* 标题区 */}
           <header className="text-center">
@@ -155,6 +157,11 @@ export default function MainPage() {
                 setMustHaveList={setMustHaveList}
               />
             </div>
+
+            <CookingTimeInput
+              cookingTime={cookingTime}
+              setCookingTime={setCookingTime}
+            />
 
             <div>
               <p className="font-medium mb-1">料理ジャンル</p>

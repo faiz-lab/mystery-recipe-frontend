@@ -1,4 +1,4 @@
-import { Button } from "@/components/button";
+import { Button } from "@/components/ui/button";
 import { AnimatePresence, motion } from "motion/react";
 
 export default function RecipeResult({

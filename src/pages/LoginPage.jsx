@@ -2,8 +2,8 @@
 import React, { useState } from "react";
 import { motion } from "motion/react";
 import { useSignIn } from "@clerk/clerk-react";
-import { Input } from "@/components/input";
-import { Button } from "@/components/button";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { FcGoogle } from "react-icons/fc";
 import { SiLine } from "react-icons/si";
 

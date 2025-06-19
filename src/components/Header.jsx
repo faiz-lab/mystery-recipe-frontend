@@ -1,6 +1,6 @@
 import React from "react";
 import { useUser, SignOutButton } from "@clerk/clerk-react";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/avatar";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 const colors = ["#FF7096"];
 
