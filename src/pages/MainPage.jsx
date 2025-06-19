@@ -107,7 +107,7 @@ export default function App() {
               onCompositionEnd={() => setIsComposing(false)}
               onKeyDown={(e) => {
                 if (e.key === "Enter" && !isComposing) {
-                  e.preventDefault(); // 防止默认提交
+                  e.preventDefault();
                   handleAddIngredient();
                 }
               }}
@@ -122,7 +122,7 @@ export default function App() {
             <select
               value={ingredientUnit}
               onChange={(e) => setIngredientUnit(e.target.value)}
-              className="w-1/5 rounded-full border-gray-300 text-gray-500 px-3 h-12 text-base"
+              className="w-1/5 rounded-full border-gray-300 text-gray-500 px-3 h-12 text-base cursor-pointer"
             >
               {unitOptions.map((unit) => (
                 <option key={unit} value={unit}>
@@ -157,7 +157,7 @@ export default function App() {
                         availableIngredients.filter((_, i) => i !== index)
                       )
                     }
-                    className="ml-3 text-sm text-red-400 hover:text-red-600"
+                    className="ml-3 text-sm text-red-400 hover:text-red-600 cursor-pointer"
                   >
                     ❌
                   </button>
@@ -167,7 +167,6 @@ export default function App() {
           </div>
 
           <h2 className="text-2xl font-semibold text-gray-700">今日の気分</h2>
-
           <div>
             <p className="font-medium mb-1">必ず使いたい食材</p>
             <div className="flex flex-wrap gap-2">
@@ -181,7 +180,7 @@ export default function App() {
                       setMustHaveList([...mustHaveList, item]);
                     }
                   }}
-                  className={`px-4 py-2 rounded-full border shadow-sm ${
+                  className={`px-4 py-2 rounded-full border shadow-sm cursor-pointer ${
                     mustHaveList.includes(item)
                       ? "bg-[#FFE2CC] text-[#FF8855] border-[#FFC5A5]"
                       : "border-gray-300 text-gray-500"
@@ -200,7 +199,7 @@ export default function App() {
                 <button
                   key={type}
                   onClick={() => setCookingType(type)}
-                  className={`px-5 py-2 rounded-full border shadow-sm ${
+                  className={`px-5 py-2 rounded-full border shadow-sm cursor-pointer ${
                     cookingType === type
                       ? "bg-[#FFE2CC] text-[#FF8855] border-[#FFC5A5]"
                       : "border-gray-300 text-gray-500"
@@ -249,7 +248,7 @@ export default function App() {
               <div className="text-center mt-8">
                 <Button
                   onClick={handleReset}
-                  className="bg-orange-300 hover:bg-orange-400 text-white px-10 py-3 rounded-full shadow-md"
+                  className="bg-orange-300 hover:bg-orange-400 text-white px-10 py-3 rounded-full shadow-md cursor-pointer"
                 >
                   🔄 もう一度
                 </Button>

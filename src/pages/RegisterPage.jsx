@@ -1,14 +1,12 @@
-// src/pages/LoginPage.jsx
+// src/pages/RegisterPage.jsx
 import React, { useState } from "react";
 import { motion } from "motion/react";
-import { useSignIn } from "@clerk/clerk-react";
+import { useSignUp } from "@clerk/clerk-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { FcGoogle } from "react-icons/fc";
-import { SiLine } from "react-icons/si";
 
-export default function LoginPage() {
-  const { signIn, setActive } = useSignIn();
+export default function RegisterPage() {
+  const { signUp, setActive } = useSignUp();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -17,7 +15,10 @@ export default function LoginPage() {
     e.preventDefault();
     setIsLoading(true);
     try {
-      const result = await signIn.create({ identifier: email, password });
+      const result = await signUp.create({
+        emailAddress: email,
+        password: password,
+      });
       if (result.status === "complete") {
         await setActive({ session: result.createdSessionId });
         window.location.href = "/main";
@@ -25,23 +26,9 @@ export default function LoginPage() {
         console.log(result);
       }
     } catch (err) {
-      alert("ログイン失敗: " + err.errors[0]?.longMessage);
+      alert("登録失敗: " + err.errors[0]?.longMessage);
     }
     setIsLoading(false);
-  };
-
-  const handleGoogleLogin = () => {
-    signIn.authenticateWithRedirect({
-      strategy: "oauth_google",
-      redirectUrl: "/main",
-    });
-  };
-
-  const handleLineLogin = () => {
-    signIn.authenticateWithRedirect({
-      strategy: "oauth_line",
-      redirectUrl: "/main",
-    });
   };
 
   return (
@@ -55,23 +42,7 @@ export default function LoginPage() {
         <h1 className="text-4xl font-extrabold text-[#FF8855] text-center">
           ミステリーレシピ 🍳
         </h1>
-        <p className="text-center text-gray-500">ログインして始めましょう</p>
-
-        <div className="space-y-4">
-          <Button
-            onClick={handleGoogleLogin}
-            className="flex items-center justify-center gap-3 rounded-full h-12 text-lg bg-gradient-to-r from-[#FFE2CC] to-[#FFDACC] text-[#FF7043] shadow-md hover:scale-105 transition w-full"
-          >
-            <FcGoogle size={24} /> Googleでログイン
-          </Button>
-
-          <Button
-            onClick={handleLineLogin}
-            className="flex items-center justify-center gap-3 rounded-full h-12 text-lg bg-gradient-to-r from-[#E0FFD9] to-[#C8F5C1] text-[#06C755] shadow-md hover:scale-105 transition w-full"
-          >
-            <SiLine size={22} /> LINEでログイン
-          </Button>
-        </div>
+        <p className="text-center text-gray-500">アカウント新規登録</p>
 
         <form onSubmit={handleSubmit} className="space-y-6 pt-6">
           <Input
@@ -95,14 +66,14 @@ export default function LoginPage() {
             disabled={isLoading || !email || !password}
             className="rounded-full h-12 text-lg font-bold bg-gradient-to-r from-[#FF8855] to-[#FF7043] text-white shadow-lg hover:scale-105 transition w-full"
           >
-            {isLoading ? "ログイン中..." : "ログイン"}
+            {isLoading ? "登録中..." : "登録する"}
           </Button>
         </form>
 
         <div className="text-center pt-4">
-          <p>まだアカウントをお持ちでないですか？</p>
-          <a href="/register" className="text-[#FF7043] underline hover:text-[#FF8855]">
-            新規登録はこちら
+          <p>既にアカウントをお持ちですか？</p>
+          <a href="/" className="text-[#FF7043] underline hover:text-[#FF8855]">
+            ログインはこちら
           </a>
         </div>
       </motion.div>
