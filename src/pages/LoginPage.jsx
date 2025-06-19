@@ -60,14 +60,14 @@ export default function LoginPage() {
         <div className="space-y-4">
           <Button
             onClick={handleGoogleLogin}
-            className="flex items-center justify-center gap-3 rounded-full h-12 text-lg bg-gradient-to-r from-[#FFE2CC] to-[#FFDACC] text-[#FF7043] shadow-md hover:scale-105 transition w-full"
+            className="flex items-center justify-center gap-3 rounded-full h-12 text-lg bg-gradient-to-r from-[#FFE2CC] to-[#FFDACC] text-[#FF7043] shadow-md hover:scale-105 transition w-full cursor-pointer"
           >
             <FcGoogle size={24} /> Googleでログイン
           </Button>
 
           <Button
             onClick={handleLineLogin}
-            className="flex items-center justify-center gap-3 rounded-full h-12 text-lg bg-gradient-to-r from-[#E0FFD9] to-[#C8F5C1] text-[#06C755] shadow-md hover:scale-105 transition w-full"
+            className="flex items-center justify-center gap-3 rounded-full h-12 text-lg bg-gradient-to-r from-[#E0FFD9] to-[#C8F5C1] text-[#06C755] shadow-md hover:scale-105 transition w-full cursor-pointer"
           >
             <SiLine size={22} /> LINEでログイン
           </Button>
@@ -101,7 +101,10 @@ export default function LoginPage() {
 
         <div className="text-center pt-4">
           <p>まだアカウントをお持ちでないですか？</p>
-          <a href="/register" className="text-[#FF7043] underline hover:text-[#FF8855]">
+          <a
+            href="/register"
+            className="text-[#FF7043] underline hover:text-[#FF8855]"
+          >
             新規登録はこちら
           </a>
         </div>
