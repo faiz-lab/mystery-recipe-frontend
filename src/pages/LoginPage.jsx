@@ -93,7 +93,7 @@ export default function LoginPage() {
           <Button
             type="submit"
             disabled={isLoading || !email || !password}
-            className="rounded-full h-12 text-lg font-bold bg-gradient-to-r from-[#FF8855] to-[#FF7043] text-white shadow-lg hover:scale-105 transition w-full"
+            className="rounded-full h-12 text-lg font-bold bg-gradient-to-r from-[#FF8855] to-[#FF7043] text-white shadow-lg hover:scale-105 transition w-full cursor-pointer"
           >
             {isLoading ? "ログイン中..." : "ログイン"}
           </Button>
