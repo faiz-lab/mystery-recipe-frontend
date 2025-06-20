@@ -25,6 +25,7 @@ Thumbs.db
 # IDE files
 .vscode/
 !.vscode/extensions.json  # 保留 vscode 插件配置（可选，加不加都行）
+.idea/
 
 # Optional: Coverage reports
 coverage/
