@@ -7,7 +7,7 @@ import CookingTypeSelector from "@/components/CookingTypeSelector";
 import RecipeResult from "@/components/RecipeResult";
 import LoadingOverlay from "@/components/LoadingOverlay";
 import { Button } from "@/components/ui/button";
-import { AnimatePresence } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import CookingTimeInput from "@/components/CookingTimeInput";
 
 const ingredientOptions = [
