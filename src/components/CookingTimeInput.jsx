@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 
 export default function CookingTimeInput({ cookingTime, setCookingTime }) {
-  const maxTime = 30;
+  const maxTime = 40;
   const sliderRef = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
 
