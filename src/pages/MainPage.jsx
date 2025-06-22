@@ -9,6 +9,7 @@ import LoadingOverlay from "@/components/LoadingOverlay";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "motion/react";
 import CookingTimeInput from "@/components/CookingTimeInput";
+import { Dialog, DialogContent, DialogHeader, DialogDescription, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 
 const ingredientOptions = [
   "ニンジン",
@@ -27,11 +28,33 @@ const ingredientOptions = [
   "パスタ",
 ];
 
+const synonymMap = {
+  "ニンジン": "carrot",
+  "じゃがいも": "potato",
+  "玉ねぎ": "onion",
+  "キャベツ": "cabbage",
+  "ブロッコリー": "broccoli",
+  "トマト": "tomato",
+  "卵": "egg",
+  "牛乳": "milk",
+  "鶏肉": "chicken_thigh",
+  "豚肉": "pork",
+  "魚": "fish",
+  "米": "rice",
+  "パン": "bread",
+  "パスタ": "pasta"
+};
+
 export default function MainPage() {
   const [ingredientName, setIngredientName] = useState("");
   const [ingredientAmount, setIngredientAmount] = useState("");
   const [ingredientUnit, setIngredientUnit] = useState("適量");
-  const [availableIngredients, setAvailableIngredients] = useState([]);
+  const [availableIngredients, setAvailableIngredients] = useState([
+    { name: "玉ねぎ", amount: "200", unit: "g" },
+    { name: "ニンジン", amount: "100", unit: "g" },
+    { name: "鶏肉", amount: "300", unit: "g" },
+    { name: "卵", amount: "3", unit: "個" }
+  ]);
   const [mustHaveList, setMustHaveList] = useState([]);
   const [cookingType, setCookingType] = useState("指定なし");
   const [isLoading, setIsLoading] = useState(false);
@@ -40,6 +63,7 @@ export default function MainPage() {
   const [showResult, setShowResult] = useState(false);
   const [isComposing, setIsComposing] = useState(false);
   const [cookingTime, setCookingTime] = useState(15);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleAddIngredient = () => {
     if (ingredientName.trim() !== "") {
@@ -61,18 +85,23 @@ export default function MainPage() {
     setIsLoading(true);
     setShowResult(false);
     try {
+      const availableIngredientNames = availableIngredients.map(item => {
+        return synonymMap[item.name] || item.name;
+      });
+      const requiredIngredientNames = mustHaveList.map(name => synonymMap[name] || name);
       const res = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/recipe`,
+        `${import.meta.env.VITE_API_BASE_URL}/recipes/recommend`,
         {
-          available_ingredients: availableIngredients,
-          must_have: mustHaveList,
-          cooking_type: cookingType,
+          available_ingredients: availableIngredientNames,
+          required_ingredients: requiredIngredientNames,
+          max_cooking_time: cookingTime,
         }
       );
       setRecipeName(res.data.name);
       setSteps(res.data.steps);
       setIsLoading(false);
       setShowResult(true);
+      setIsDialogOpen(true);
     } catch (error) {
       console.error("Error generating recipe:", error);
       setIsLoading(false);
@@ -182,14 +211,39 @@ export default function MainPage() {
               {isLoading ? "生成中..." : "🍳 料理を始める"}
             </Button>
           </div>
+          {/* 这里插入新的 Dialog 区域 */}
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <DialogContent className="max-w-xl">
+              <DialogHeader>
+                <DialogTitle className="text-2xl text-green-500">{recipeName} 🎯</DialogTitle>
+              </DialogHeader>
+              <DialogDescription>
+                おすすめのレシピの詳細手順を表示します:
+              </DialogDescription>
+              <ul className="space-y-3 mt-4">
+                {steps.map((step, index) => (
+                    <li
+                        key={index}
+                        className="bg-[#FAFAFA] rounded-xl p-4 shadow-sm border border-gray-100"
+                    >
+                      STEP {step.step_no}: {step.instruction}
+                    </li>
+                ))}
+              </ul>
 
-          <RecipeResult
-            showResult={showResult}
-            recipeName={recipeName}
-            steps={steps}
-            handleReset={handleReset}
-          />
-
+              <DialogFooter className="mt-8">
+                <Button
+                    onClick={() => {
+                      setIsDialogOpen(false);
+                      handleReset();
+                    }}
+                    className="bg-orange-300 hover:bg-orange-400 text-white px-10 py-3 rounded-full shadow-md transition-all transform hover:scale-105 active:scale-95"
+                >
+                  🔄 もう一度
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
           <LoadingOverlay isLoading={isLoading} />
         </div>
       </div>

@@ -26,7 +26,7 @@ export default function RecipeResult({
                 key={index}
                 className="bg-[#FAFAFA] rounded-xl p-4 shadow-sm border border-gray-100"
               >
-                STEP {index + 1}: {step}
+                STEP {step.step_no}: {step.instruction}
               </li>
             ))}
           </ul>
