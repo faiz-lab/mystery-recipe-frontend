@@ -4,7 +4,6 @@ import Header from "@/components/Header";
 import IngredientInput from "@/components/IngredientInput";
 import IngredientSelector from "@/components/IngredientSelector";
 import CookingTypeSelector from "@/components/CookingTypeSelector";
-import RecipeResult from "@/components/RecipeResult";
 import LoadingOverlay from "@/components/LoadingOverlay";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "motion/react";
@@ -57,10 +56,11 @@ export default function MainPage() {
   const [ingredientAmount, setIngredientAmount] = useState("");
   const [ingredientUnit, setIngredientUnit] = useState("適量");
   const [availableIngredients, setAvailableIngredients] = useState([
-    { name: "玉ねぎ", amount: "200", unit: "g" },
-    { name: "ニンジン", amount: "100", unit: "g" },
-    { name: "鶏肉", amount: "300", unit: "g" },
-    { name: "卵", amount: "3", unit: "個" },
+    { name: "玉ねぎ", quantity: "200", unit: "g" },
+    { name: "ニンジン", quantity: "100", unit: "g" },
+    { name: "鶏肉", quantity: "300", unit: "g" },
+    { name: "卵", quantity: "3", unit: "個" },
+    { name: "じゃがいも", quantity: "3", unit: "個" },
   ]);
   const [mustHaveList, setMustHaveList] = useState([]);
   const [cookingType, setCookingType] = useState("指定なし");
@@ -69,7 +69,7 @@ export default function MainPage() {
   const [recipeName, setRecipeName] = useState("");
   const [showResult, setShowResult] = useState(false);
   const [isComposing, setIsComposing] = useState(false);
-  const [cookingTime, setCookingTime] = useState(15);
+  const [cookingTime, setCookingTime] = useState(20);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -79,7 +79,7 @@ export default function MainPage() {
         ...prev,
         {
           name: ingredientName,
-          amount: ingredientAmount || "適量",
+          quantity: ingredientAmount || "適量",
           unit: ingredientAmount ? ingredientUnit : "",
         },
       ]);
@@ -177,7 +177,7 @@ export default function MainPage() {
                     exit={{ scale: 0.5, opacity: 0 }}
                     transition={{ type: "spring", stiffness: 300, damping: 20 }}
                   >
-                    {item.name} ({item.amount}
+                    {item.name} ({item.quantity}
                     {item.unit})
                     <button
                       onClick={() =>
