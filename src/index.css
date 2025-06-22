@@ -110,6 +110,12 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+/* Firefox 专用 */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.15) transparent;
+}
+
 /* 全局滚动条美化 (适配现代浏览器) */
 ::-webkit-scrollbar {
   width: 8px;
