@@ -133,7 +133,7 @@ export default function MainPage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-b from-[#FAFAFA] to-[#F7F7F7]">
+    <div className="flex flex-col min-h-[100dvh] bg-gradient-to-b from-[#FAFAFA] to-[#F7F7F7]">
       <Header />
 
       <div className="flex-1 flex justify-center items-start py-6 px-2">
@@ -149,7 +149,7 @@ export default function MainPage() {
           </header>
 
           {/* 卡片功能区 */}
-          <section className="bg-white rounded-3xl p-4 md:p-6 lg:p-8 space-y-4 md:space-y-6 border border-gray-100 shadow-md">
+          <section className="bg-white rounded-3xl p-3 md:p-4 lg:p-6 space-y-3 md:space-y-4 border border-gray-100 shadow-md">
             <h2 className="text-2xl font-semibold text-gray-700">
               🧺 持っている食材
             </h2>
