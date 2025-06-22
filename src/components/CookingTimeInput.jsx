@@ -41,7 +41,7 @@ export default function CookingTimeInput({ cookingTime, setCookingTime }) {
   return (
     <div className="flex flex-col gap-4 py-2 select-none">
       <div className="flex justify-between items-center">
-        <p className="font-medium text-lg">料理時間</p>
+        <p className="font-medium text-lg">⏰ 料理時間</p>
         <div className="text-[#FF8855] font-bold text-xl">{cookingTime} 分</div>
       </div>
 

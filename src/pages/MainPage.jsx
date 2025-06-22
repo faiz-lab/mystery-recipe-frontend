@@ -9,7 +9,14 @@ import LoadingOverlay from "@/components/LoadingOverlay";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "motion/react";
 import CookingTimeInput from "@/components/CookingTimeInput";
-import { Dialog, DialogContent, DialogHeader, DialogDescription, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogDescription,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 
 const ingredientOptions = [
   "ニンジン",
@@ -29,20 +36,20 @@ const ingredientOptions = [
 ];
 
 const synonymMap = {
-  "ニンジン": "carrot",
-  "じゃがいも": "potato",
-  "玉ねぎ": "onion",
-  "キャベツ": "cabbage",
-  "ブロッコリー": "broccoli",
-  "トマト": "tomato",
-  "卵": "egg",
-  "牛乳": "milk",
-  "鶏肉": "chicken_thigh",
-  "豚肉": "pork",
-  "魚": "fish",
-  "米": "rice",
-  "パン": "bread",
-  "パスタ": "pasta"
+  ニンジン: "carrot",
+  じゃがいも: "potato",
+  玉ねぎ: "onion",
+  キャベツ: "cabbage",
+  ブロッコリー: "broccoli",
+  トマト: "tomato",
+  卵: "egg",
+  牛乳: "milk",
+  鶏肉: "chicken_thigh",
+  豚肉: "pork",
+  魚: "fish",
+  米: "rice",
+  パン: "bread",
+  パスタ: "pasta",
 };
 
 export default function MainPage() {
@@ -53,7 +60,7 @@ export default function MainPage() {
     { name: "玉ねぎ", amount: "200", unit: "g" },
     { name: "ニンジン", amount: "100", unit: "g" },
     { name: "鶏肉", amount: "300", unit: "g" },
-    { name: "卵", amount: "3", unit: "個" }
+    { name: "卵", amount: "3", unit: "個" },
   ]);
   const [mustHaveList, setMustHaveList] = useState([]);
   const [cookingType, setCookingType] = useState("指定なし");
@@ -64,6 +71,7 @@ export default function MainPage() {
   const [isComposing, setIsComposing] = useState(false);
   const [cookingTime, setCookingTime] = useState(15);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleAddIngredient = () => {
     if (ingredientName.trim() !== "") {
@@ -84,11 +92,14 @@ export default function MainPage() {
   const handleStartCooking = async () => {
     setIsLoading(true);
     setShowResult(false);
+    setErrorMessage(""); // 清空旧错误信息
     try {
-      const availableIngredientNames = availableIngredients.map(item => {
+      const availableIngredientNames = availableIngredients.map((item) => {
         return synonymMap[item.name] || item.name;
       });
-      const requiredIngredientNames = mustHaveList.map(name => synonymMap[name] || name);
+      const requiredIngredientNames = mustHaveList.map(
+        (name) => synonymMap[name] || name
+      );
       const res = await axios.post(
         `${import.meta.env.VITE_API_BASE_URL}/recipes/recommend`,
         {
@@ -97,14 +108,21 @@ export default function MainPage() {
           max_cooking_time: cookingTime,
         }
       );
-      setRecipeName(res.data.name);
-      setSteps(res.data.steps);
+      if (res.data.found) {
+        setRecipeName(res.data.data.name);
+        setSteps(res.data.data.steps);
+      } else {
+        setErrorMessage(res.data.message);
+      }
+
       setIsLoading(false);
       setShowResult(true);
       setIsDialogOpen(true);
     } catch (error) {
       console.error("Error generating recipe:", error);
       setIsLoading(false);
+      setErrorMessage("エラーが発生しました。もう一度お試しください。");
+      setIsDialogOpen(true);
     }
   };
 
@@ -133,7 +151,7 @@ export default function MainPage() {
           {/* 卡片功能区 */}
           <section className="bg-white rounded-3xl p-8 space-y-6 border border-gray-100 shadow-[0_4px_12px_rgba(0,0,0,0.08)]">
             <h2 className="text-2xl font-semibold text-gray-700">
-              持っている食材
+              🧺 持っている食材
             </h2>
 
             <IngredientInput
@@ -176,10 +194,10 @@ export default function MainPage() {
               </AnimatePresence>
             </div>
 
-            <h2 className="text-2xl font-semibold text-gray-700">今日の気分</h2>
+            <h2 className="text-2xl font-semibold text-gray-700">🌤️ 今日の気分</h2>
 
             <div>
-              <p className="font-medium mb-1">必ず使いたい食材</p>
+              <p className="font-medium mb-1">🎯 必ず使いたい食材</p>
               <IngredientSelector
                 ingredientOptions={ingredientOptions}
                 mustHaveList={mustHaveList}
@@ -193,7 +211,7 @@ export default function MainPage() {
             />
 
             <div>
-              <p className="font-medium mb-1">料理ジャンル</p>
+              <p className="font-medium mb-1">🍽️ 料理ジャンル</p>
               <CookingTypeSelector
                 cookingType={cookingType}
                 setCookingType={setCookingType}
@@ -215,35 +233,57 @@ export default function MainPage() {
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogContent className="max-w-xl">
               <DialogHeader>
-                <DialogTitle className="text-2xl text-green-500">{recipeName} 🎯</DialogTitle>
+                <DialogTitle className="text-2xl text-green-500">
+                  {errorMessage ? "結果がありませんでした" : `${recipeName} 🎯`}
+                </DialogTitle>
               </DialogHeader>
+
               <DialogDescription>
-                おすすめのレシピの詳細手順を表示します:
+                {errorMessage
+                  ? "条件に合うレシピが見つかりませんでした。"
+                  : "おすすめのレシピの詳細手順を表示します:"}
               </DialogDescription>
-              <ul className="space-y-3 mt-4">
-                {steps.map((step, index) => (
+
+              {errorMessage ? (
+                <div className="flex flex-col justify-center items-center text-center py-8">
+                  <div className="text-5xl mb-4">😢</div>
+                  <div className="text-2xl font-semibold text-[#FF7043] mb-2">
+                    ごめんなさい！
+                  </div>
+                  <div className="text-lg text-gray-600">
+                    条件に合うレシピが見つかりませんでした。
+                  </div>
+                  <div className="mt-2 text-sm text-gray-400">
+                    食材を少し変えてもう一度お試しください！
+                  </div>
+                </div>
+              ) : (
+                <ul className="space-y-3 mt-4">
+                  {steps.map((step, index) => (
                     <li
-                        key={index}
-                        className="bg-[#FAFAFA] rounded-xl p-4 shadow-sm border border-gray-100"
+                      key={index}
+                      className="bg-[#FAFAFA] rounded-xl p-4 shadow-sm border border-gray-100"
                     >
                       STEP {step.step_no}: {step.instruction}
                     </li>
-                ))}
-              </ul>
+                  ))}
+                </ul>
+              )}
 
               <DialogFooter className="mt-8">
                 <Button
-                    onClick={() => {
-                      setIsDialogOpen(false);
-                      handleReset();
-                    }}
-                    className="bg-orange-300 hover:bg-orange-400 text-white px-10 py-3 rounded-full shadow-md transition-all transform hover:scale-105 active:scale-95"
+                  onClick={() => {
+                    setIsDialogOpen(false);
+                    handleReset();
+                  }}
+                  className="bg-orange-300 hover:bg-orange-400 text-white px-10 py-3 rounded-full shadow-lg transition-all transform hover:scale-105 active:scale-95 text-lg font-semibold"
                 >
                   🔄 もう一度
                 </Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>
+
           <LoadingOverlay isLoading={isLoading} />
         </div>
       </div>

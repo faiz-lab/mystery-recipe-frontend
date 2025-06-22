@@ -36,7 +36,7 @@ export default function Header() {
       <div className="flex justify-between items-center px-6 py-2 bg-white shadow-sm">
         <div className="flex items-center gap-3">
           <div className="text-3xl font-extrabold text-[#FF8855] drop-shadow-sm">
-            🍳 Team-E
+            🧑‍🍳 Team-E
           </div>
         </div>
 
