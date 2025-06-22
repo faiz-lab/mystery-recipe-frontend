@@ -140,7 +140,7 @@ export default function MainPage() {
         <div className="max-w-3xl w-full space-y-6 relative">
           {/* 标题区 */}
           <header className="text-center">
-            <h1 className="text-5xl font-extrabold text-[#FF8855] mb-3 tracking-tight drop-shadow">
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-[#FF8855] mb-3 tracking-tight drop-shadow">
               ミステリーレシピ
             </h1>
             <p className="text-[#777] text-lg">
@@ -149,7 +149,7 @@ export default function MainPage() {
           </header>
 
           {/* 卡片功能区 */}
-          <section className="bg-white rounded-3xl p-6 space-y-4 border border-gray-100 shadow-[0_4px_12px_rgba(0,0,0,0.08)]">
+          <section className="bg-white rounded-3xl p-4 md:p-6 lg:p-8 space-y-4 md:space-y-6 border border-gray-100 shadow-md">
             <h2 className="text-2xl font-semibold text-gray-700">
               🧺 持っている食材
             </h2>
