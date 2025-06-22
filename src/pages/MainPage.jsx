@@ -136,8 +136,8 @@ export default function MainPage() {
     <div className="flex flex-col min-h-screen bg-gradient-to-b from-[#FAFAFA] to-[#F7F7F7]">
       <Header />
 
-      <div className="flex-1 flex justify-center items-start py-12 px-4">
-        <div className="max-w-3xl w-full space-y-12 relative">
+      <div className="flex-1 flex justify-center items-start py-6 px-2">
+        <div className="max-w-3xl w-full space-y-6 relative">
           {/* 标题区 */}
           <header className="text-center">
             <h1 className="text-5xl font-extrabold text-[#FF8855] mb-3 tracking-tight drop-shadow">
@@ -149,7 +149,7 @@ export default function MainPage() {
           </header>
 
           {/* 卡片功能区 */}
-          <section className="bg-white rounded-3xl p-8 space-y-6 border border-gray-100 shadow-[0_4px_12px_rgba(0,0,0,0.08)]">
+          <section className="bg-white rounded-3xl p-6 space-y-4 border border-gray-100 shadow-[0_4px_12px_rgba(0,0,0,0.08)]">
             <h2 className="text-2xl font-semibold text-gray-700">
               🧺 持っている食材
             </h2>
