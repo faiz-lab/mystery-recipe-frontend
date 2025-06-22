@@ -17,23 +17,6 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 
-const ingredientOptions = [
-  "ニンジン",
-  "じゃがいも",
-  "玉ねぎ",
-  "キャベツ",
-  "ブロッコリー",
-  "トマト",
-  "卵",
-  "牛乳",
-  "鶏肉",
-  "豚肉",
-  "魚",
-  "米",
-  "パン",
-  "パスタ",
-];
-
 const synonymMap = {
   ニンジン: "carrot",
   じゃがいも: "potato",
@@ -52,11 +35,11 @@ const synonymMap = {
 };
 
 const emojiMap = {
-  "玉ねぎ": "🧅",
-  "ニンジン": "🥕",
-  "鶏肉": "🍗",
-  "卵": "🥚",
-  "じゃがいも": "🥔",
+  玉ねぎ: "🧅",
+  ニンジン: "🥕",
+  鶏肉: "🍗",
+  卵: "🥚",
+  じゃがいも: "🥔",
   // 其他食材...
 };
 
@@ -203,12 +186,16 @@ export default function MainPage() {
               </AnimatePresence>
             </div>
 
-            <h2 className="text-2xl font-semibold text-gray-700">🌤️ 今日の気分</h2>
+            <h2 className="text-2xl font-semibold text-gray-700">
+              🌤️ 今日の気分
+            </h2>
 
             <div>
               <p className="font-medium mb-1">🎯 必ず使いたい食材</p>
               <IngredientSelector
-                ingredientOptions={availableIngredients.map(item => item.name)}
+                ingredientOptions={availableIngredients.map(
+                  (item) => item.name
+                )}
                 mustHaveList={mustHaveList}
                 setMustHaveList={setMustHaveList}
                 emojiMap={emojiMap}
