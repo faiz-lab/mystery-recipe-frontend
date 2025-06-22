@@ -51,6 +51,15 @@ const synonymMap = {
   パスタ: "pasta",
 };
 
+const emojiMap = {
+  "玉ねぎ": "🧅",
+  "ニンジン": "🥕",
+  "鶏肉": "🍗",
+  "卵": "🥚",
+  "じゃがいも": "🥔",
+  // 其他食材...
+};
+
 export default function MainPage() {
   const [ingredientName, setIngredientName] = useState("");
   const [ingredientAmount, setIngredientAmount] = useState("");
@@ -199,9 +208,10 @@ export default function MainPage() {
             <div>
               <p className="font-medium mb-1">🎯 必ず使いたい食材</p>
               <IngredientSelector
-                ingredientOptions={ingredientOptions}
+                ingredientOptions={availableIngredients.map(item => item.name)}
                 mustHaveList={mustHaveList}
                 setMustHaveList={setMustHaveList}
+                emojiMap={emojiMap}
               />
             </div>
 

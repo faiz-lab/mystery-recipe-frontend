@@ -2,6 +2,7 @@ export default function IngredientSelector({
   ingredientOptions,
   mustHaveList,
   setMustHaveList,
+  emojiMap
 }) {
   return (
     <div className="flex flex-wrap gap-2">
@@ -9,6 +10,7 @@ export default function IngredientSelector({
         <button
           key={idx}
           onClick={() => {
+            console.log("Clicked:", item);
             if (mustHaveList.includes(item)) {
               setMustHaveList(mustHaveList.filter((v) => v !== item));
             } else {
@@ -23,6 +25,7 @@ export default function IngredientSelector({
             }
             hover:scale-110 active:scale-95`}
         >
+          <span className="mr-1">{emojiMap[item] || "❓"}</span>
           {item}
         </button>
       ))}
