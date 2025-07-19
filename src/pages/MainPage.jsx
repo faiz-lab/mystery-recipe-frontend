@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Header from "@/components/Header";
 import IngredientInput from "@/components/IngredientInput";
 import IngredientSelector from "@/components/IngredientSelector";
@@ -8,6 +8,8 @@ import CookingTimeInput from "@/components/CookingTimeInput";
 import IngredientCardList from "@/components/IngredientCardList.jsx";
 import RecipeDialog from "@/components/RecipeDialog.jsx";
 import FeedbackDialog from "@/components/FeedbackDialog";
+import CookingTypeSelector from "@/components/CookingTypeSelector.jsx";
+import InventoryDialog from "@/components/InventoryDialog.jsx";
 import useMainPageState from "@/hooks/useMainPageState";
 
 export default function MainPage() {
@@ -17,6 +19,7 @@ export default function MainPage() {
         ingredientUnit, setIngredientUnit,
         availableIngredients, setAvailableIngredients,
         mustHaveList, setMustHaveList,
+        cookingType, setCookingType,
         cookingTime, setCookingTime,
         isLoading, isDialogOpen,
         setIsDialogOpen, isAdding, setFeedbackCandidate,
@@ -25,6 +28,9 @@ export default function MainPage() {
         feedbackCandidate, handleFeedbackSubmit,
         handleAddIngredient, handleStartCooking, handleReset,
     } = useMainPageState();
+
+    const [isInventoryOpen, setIsInventoryOpen] = useState(false);
+    const [showMoodDetail, setShowMoodDetail] = useState(false);
 
     const emojiMap = Object.fromEntries(
         availableIngredients.map(item => [item.displayName, item.emoji || "❓"])
@@ -35,7 +41,7 @@ export default function MainPage() {
             <Header/>
 
             <div className="flex-1 flex justify-center items-start py-6 px-2">
-                <div className="max-w-3xl w-full space-y-6 relative">
+                <div className="max-w-3xl w-full space-y-6 relative pb-32">
                     <header className="text-center">
                         <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-[#FF8855] mb-3 tracking-tight drop-shadow">
                             ミステリーレシピ
@@ -65,6 +71,8 @@ export default function MainPage() {
 
                         <IngredientCardList
                             ingredients={availableIngredients}
+                            limit={3}
+                            onShowMore={() => setIsInventoryOpen(true)}
                             onRemove={(index) =>
                                 setAvailableIngredients(
                                     availableIngredients.filter((_, i) => i !== index)
@@ -72,8 +80,14 @@ export default function MainPage() {
                             }
                         />
 
-                        <h2 className="text-2xl font-semibold text-gray-700">
-                            🌤️ 今日の気分
+                        <h2 className="text-2xl font-semibold text-gray-700 flex items-center justify-between">
+                            <span>🌤️ 今日の気分</span>
+                            <button
+                                onClick={() => setShowMoodDetail(!showMoodDetail)}
+                                className="text-sm text-gray-500 underline"
+                            >
+                                {showMoodDetail ? "閉じる" : "詳細設定"}
+                            </button>
                         </h2>
 
                         <div>
@@ -92,14 +106,24 @@ export default function MainPage() {
                             cookingTime={cookingTime}
                             setCookingTime={setCookingTime}
                         />
+
+                        {showMoodDetail && (
+                            <div>
+                                <p className="font-medium mb-1">🍽️ 調理タイプ</p>
+                                <CookingTypeSelector
+                                    cookingType={cookingType}
+                                    setCookingType={setCookingType}
+                                />
+                            </div>
+                        )}
                     </section>
 
-                    <div className="text-center">
+                    <div className="fixed bottom-4 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-md text-center z-20">
                         <Button
                             size="lg"
                             onClick={handleStartCooking}
                             disabled={isLoading}
-                            className="text-lg font-bold rounded-full py-6 px-8 bg-gradient-to-r from-[#FF8855] to-[#FF7043] text-white shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105 active:scale-95"
+                            className="w-full text-lg font-bold rounded-full py-6 px-8 bg-gradient-to-r from-[#FF8855] to-[#FF7043] text-white shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105 active:scale-95"
                         >
                             {isLoading ? "生成中..." : "🍳 料理を始める"}
                         </Button>
@@ -122,6 +146,13 @@ export default function MainPage() {
                             handleSubmit={handleFeedbackSubmit}
                         />
                     )}
+
+                    <InventoryDialog
+                        isOpen={isInventoryOpen}
+                        onClose={() => setIsInventoryOpen(false)}
+                        ingredients={availableIngredients}
+                        setIngredients={setAvailableIngredients}
+                    />
 
                     <LoadingOverlay isLoading={isLoading} isAdding={isAdding}/>
                 </div>

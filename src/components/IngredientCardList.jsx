@@ -1,10 +1,18 @@
 import { motion, AnimatePresence } from "motion/react";
 
-export default function IngredientCardList({ ingredients, onRemove }) {
+export default function IngredientCardList({
+  ingredients,
+  onRemove,
+  limit = Infinity,
+  onShowMore,
+}) {
+    const displayIngredients = ingredients.slice(0, limit);
+    const remaining = ingredients.length - displayIngredients.length;
+
     return (
         <div className="flex flex-wrap gap-3">
             <AnimatePresence>
-                {ingredients.map((item, index) => (
+                {displayIngredients.map((item, index) => (
                     <motion.div
                         key={index}
                         className="flex items-center bg-orange-50 text-orange-700 rounded-full px-4 py-2 shadow-sm border border-orange-200"
@@ -23,6 +31,14 @@ export default function IngredientCardList({ ingredients, onRemove }) {
                     </motion.div>
                 ))}
             </AnimatePresence>
+            {remaining > 0 && (
+                <button
+                    onClick={onShowMore}
+                    className="bg-orange-50 text-orange-700 rounded-full px-4 py-2 shadow-sm border border-orange-200 text-sm"
+                >
+                    ＋{remaining}
+                </button>
+            )}
         </div>
     );
 }
